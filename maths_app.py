@@ -120,6 +120,7 @@ with tab1:
 # --- TAB 2: VIEW FULL PAPERS ---
 with tab2:
     st.header("Quick Download: Full Papers")
+    st.info("Before you start, click the SYNC button first in the sidebar.")
     c1, c2, c3 = st.columns(3)
     with c1:
         v_year = st.selectbox("Year", [str(y) for y in range(2030, 2003, -1)])
@@ -193,6 +194,7 @@ with tab4:
                 for f in up_files:
                     with open(os.path.join(FOLDERS[dest], f.name), "wb") as s: s.write(f.getbuffer())
                 st.success("Uploaded!")
+                st.info("After uploding, click the SYNC button at the sidebar.")
         with d_col:
             st.subheader("Delete")
             dest_d = st.selectbox("Clean Folder", list(FOLDERS.keys()))
