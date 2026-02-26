@@ -86,6 +86,7 @@ tab1, tab2, tab3, tab4 = st.tabs(["🔍 Search via Keyword & Extract", "📅 Vie
 # --- TAB 1: SEARCH & COLLECT ---
 with tab1:
     st.header("Search for Specific Questions")
+    st.info("Before you start, its a good practice to click the SYNC button first in the sidebar.")
     col_input, col_reset = st.columns([4, 1])
 
     with col_input:
