@@ -181,28 +181,35 @@ with tab3:
                 st.download_button("📥 Click to Download Document", f, file_name=target)
 
 # --- TAB 4: ADMIN ---
+####################################################################
 with tab4:
     st.header("Admin Management")
+    st.info("💡 **Tip:** To add new papers, upload them directly to your [Google Drive Folder](https://drive.google.com/drive/folders/1MnXORHT0jmoqpDie4SjlVoj3l8w6Go0a), then click **Sync New Files** in the sidebar.")
+    
     pwd = st.text_input("Admin Password", type="password")
     if pwd == ADMIN_PASSWORD:
-        u_col, d_col = st.columns(2)
-        with u_col:
-            st.subheader("Upload")
-            dest = st.selectbox("Destination", list(FOLDERS.keys()))
-            up_files = st.file_uploader("Select PDFs", type="pdf", accept_multiple_files=True)
-            if st.button("Upload"):
-                for f in up_files:
-                    with open(os.path.join(FOLDERS[dest], f.name), "wb") as s: s.write(f.getbuffer())
-                st.success("Uploaded!")
-                st.info("After uploding, click the SYNC button at the sidebar.")
-        with d_col:
-            st.subheader("Delete")
-            dest_d = st.selectbox("Clean Folder", list(FOLDERS.keys()))
-            to_del = st.selectbox("File to Remove", ["---"] + os.listdir(FOLDERS[dest_d]))
-            if to_del != "---" and st.button("Delete Permanently"):
-                os.remove(os.path.join(FOLDERS[dest_d], to_del))
-                st.rerun()
-
+        st.subheader("🗑️ Local File Management")
+        st.write("Use this to remove files from the app's current session.")
+        
+        dest_d = st.selectbox("Select Folder to Clean", list(FOLDERS.keys()))
+        
+        # Get list of files, filter out hidden system files
+        current_files = [f for f in os.listdir(FOLDERS[dest_d]) if not f.startswith('.')]
+        
+        to_del = st.selectbox("Select File to Remove Permanently", ["---"] + current_files)
+        
+        if to_del != "---":
+            if st.button("Delete File"):
+                try:
+                    os.remove(os.path.join(FOLDERS[dest_d], to_del))
+                    st.success(f"Deleted {to_del}")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Error deleting file: {e}")
+    else:
+        if pwd:
+            st.warning("Incorrect Password")
+####################################################################
 # --- FOOTER ---
 st.markdown("---")
 
