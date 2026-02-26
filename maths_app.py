@@ -180,29 +180,41 @@ with tab3:
             with open(target, "rb") as f:
                 st.download_button("📥 Click to Download Document", f, file_name=target)
 
-# --- TAB 4: ADMIN ---
 ####################################################################
 # --- TAB 4: ADMIN ---
 with tab4:
     st.header("Admin Control Center")
-    st.markdown("""
-    ### 📂 Library Management
-    To manage your files (Upload or Delete), please use the Google Drive portal directly. 
-    Changes will appear here after clicking **Sync** in the sidebar.
-    """)
     
-    # Direct link to your specific folder for convenience
-    st.link_button("Go to Google Drive Library", "https://drive.google.com/drive/folders/1MnXORHT0jmoqpDie4SjlVoj3l8w6Go0a")
+    # Password Protection
+    pwd = st.text_input("Enter Admin Password to access controls", type="password")
     
-    st.divider()
-    
-    st.subheader("📊 System Status")
-    for label, folder in FOLDERS.items():
-        if os.path.exists(folder):
-            file_count = len([f for f in os.listdir(folder) if f.endswith('.pdf')])
-            st.write(f"**{label}:** {file_count} files synced")
-        else:
-            st.error(f"**{label}:** Folder missing! Please click Sync.")
+    if pwd == ADMIN_PASSWORD:
+        st.success("Welcome, Admin.")
+        
+        st.markdown("""
+        ### 📂 Library Management
+        To add or remove papers permanently, please use the Google Drive portal. 
+        Changes will reflect here after clicking **Sync** in the sidebar.
+        """)
+        
+        # Direct link for the Admin
+        st.link_button("Go to Google Drive Library", "https://drive.google.com/drive/folders/1MnXORHT0jmoqpDie4SjlVoj3l8w6Go0a")
+        
+        st.divider()
+        
+        st.subheader("📊 Live System Status")
+        st.write("This shows how many files are currently downloaded to the app's server:")
+        
+        # Display file counts for each folder
+        for label, folder in FOLDERS.items():
+            if os.path.exists(folder):
+                file_count = len([f for f in os.listdir(folder) if f.endswith('.pdf')])
+                st.write(f"✅ **{label}:** {file_count} files synced")
+            else:
+                st.error(f"❌ **{label}:** Folder missing! Please click Sync.")
+                
+    elif pwd:
+        st.error("Incorrect Password. Access Denied.")
 ####################################################################
 # --- FOOTER ---
 st.markdown("---")
