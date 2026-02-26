@@ -182,33 +182,27 @@ with tab3:
 
 # --- TAB 4: ADMIN ---
 ####################################################################
+# --- TAB 4: ADMIN ---
 with tab4:
-    st.header("Admin Management")
-    st.info("💡 **Tip:** To add new papers, upload them directly to your [Google Drive Folder](https://drive.google.com/drive/folders/1MnXORHT0jmoqpDie4SjlVoj3l8w6Go0a), then click **Sync New Files** in the sidebar.")
+    st.header("Admin Control Center")
+    st.markdown("""
+    ### 📂 Library Management
+    To manage your files (Upload or Delete), please use the Google Drive portal directly. 
+    Changes will appear here after clicking **Sync** in the sidebar.
+    """)
     
-    pwd = st.text_input("Admin Password", type="password")
-    if pwd == ADMIN_PASSWORD:
-        st.subheader("🗑️ Local File Management")
-        st.write("Use this to remove files from the app's current session.")
-        
-        dest_d = st.selectbox("Select Folder to Clean", list(FOLDERS.keys()))
-        
-        # Get list of files, filter out hidden system files
-        current_files = [f for f in os.listdir(FOLDERS[dest_d]) if not f.startswith('.')]
-        
-        to_del = st.selectbox("Select File to Remove Permanently", ["---"] + current_files)
-        
-        if to_del != "---":
-            if st.button("Delete File"):
-                try:
-                    os.remove(os.path.join(FOLDERS[dest_d], to_del))
-                    st.success(f"Deleted {to_del}")
-                    st.rerun()
-                except Exception as e:
-                    st.error(f"Error deleting file: {e}")
-    else:
-        if pwd:
-            st.warning("Incorrect Password")
+    # Direct link to your specific folder for convenience
+    st.link_button("Go to Google Drive Library", "https://drive.google.com/drive/folders/1MnXORHT0jmoqpDie4SjlVoj3l8w6Go0a")
+    
+    st.divider()
+    
+    st.subheader("📊 System Status")
+    for label, folder in FOLDERS.items():
+        if os.path.exists(folder):
+            file_count = len([f for f in os.listdir(folder) if f.endswith('.pdf')])
+            st.write(f"**{label}:** {file_count} files synced")
+        else:
+            st.error(f"**{label}:** Folder missing! Please click Sync.")
 ####################################################################
 # --- FOOTER ---
 st.markdown("---")
